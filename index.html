@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Posiciones</title>
-  <script src="https://kit.fontawesome.com/yourcode.js"></script>
   
   <style>
     body {
@@ -52,6 +51,12 @@
       user-select: none;
     }
 
+    .persona.active {
+      background-color: #fb8c00;
+    }
+    .persona.disabled {
+      background-color: #ececec;
+    }
     .persona:hover {
       background-color: #fb8c00;
     }
@@ -87,7 +92,7 @@
     <ul class="islas" id="capture">
       <li v-for="(isla, indexIsla) in islas" class="isla">
         <ul class="personas">
-          <li v-for="(person, indexPerson) in isla" class="persona" @click="addCambiaso({ person, indexIsla, indexPerson })" :style="stylesPerson({ person, indexIsla, indexPerson })">
+          <li v-for="(person, indexPerson) in isla" class="persona" @click="addCambiaso({ person, indexIsla, indexPerson })" :class="classPerson({ person, indexIsla, indexPerson })">
             {{ person }}
           </li>
         </ul>
@@ -204,12 +209,13 @@
           }
         },
 
-        stylesPerson ({ person, indexIsla, indexPerson }) {
-          const bool = this.cambiaso.some((item) => item.indexIsla == indexIsla && item.indexPerson == indexPerson)
+        classPerson ({ person, indexIsla, indexPerson }) {
+          const cambiasoActive = this.cambiaso.some((item) => item.indexIsla == indexIsla && item.indexPerson == indexPerson)
           
-          return {
-            'background-color': bool? '#fb8c00' : person== 'X'? '#ececec' : 'white',
-          }
+          return [
+            cambiasoActive && 'active',
+            person == 'X' && 'disabled'
+          ]
         }
       },
     })
