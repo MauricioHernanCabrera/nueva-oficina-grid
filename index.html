@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Posiciones</title>
+  <script src="https://kit.fontawesome.com/yourcode.js"></script>
+  
   <style>
     body {
       margin: 0;
@@ -55,23 +57,31 @@
     }
     
     .actions {
-      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin-bottom: 24px;
+      column-gap: 12px;
+      row-gap: 12px;
     }
 
-    button {
+    .actions .btn {
       border: 2px solid #d8d8d8;
       background: white;
       font-size: 32px;
       padding: 10px 0;
-      width: 100%;
       cursor: pointer;
     }
+
+    .actions .btn-screenshot {
+      grid-column: span 2;
+    }
+
   </style>
 </head>
 <body>
   <div id="app">
     <div class="actions">
-      <button @click="takeScreen">screenshot</button>
+      <button class="btn btn-screenshot"@click="takeScreen">screenshot</button>
     </div>
 
     <ul class="islas" id="capture">
