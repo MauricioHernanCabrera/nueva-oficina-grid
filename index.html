@@ -26,6 +26,7 @@
       column-gap: 32px;
       row-gap: 48px;
       border: 1px solid #d8d8d8;
+      background: white;
     }
 
     .isla {
@@ -52,11 +53,28 @@
     .persona:hover {
       background-color: #fb8c00;
     }
+    
+    .actions {
+      margin-bottom: 20px;
+    }
+
+    button {
+      border: 2px solid #d8d8d8;
+      background: white;
+      font-size: 32px;
+      padding: 10px 0;
+      width: 100%;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div id="app">
-    <ul class="islas">
+    <div class="actions">
+      <button @click="takeScreen">screenshot</button>
+    </div>
+
+    <ul class="islas" id="capture">
       <li v-for="(isla, indexIsla) in islas" class="isla">
         <ul class="personas">
           <li v-for="(person, indexPerson) in isla" class="persona" @click="addCambiaso({ person, indexIsla, indexPerson })" :style="stylesPerson({ person, indexIsla, indexPerson })">
@@ -68,7 +86,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
   <script>
     let array = []
     new Vue({
@@ -145,6 +164,21 @@
       },
 
       methods: {
+        async takeScreen () {
+
+          const el = document.querySelector("#capture");
+          console.log(el)
+          const canvas = await html2canvas(el);
+
+          const route = canvas.toDataURL("image/jpeg");
+          const fileName = `nueva-oficina.png`;
+          const link = document.createElement("a");
+          link.href = route;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        },
         addCambiaso({person, indexIsla, indexPerson}) {
           this.cambiaso.push({
             person, indexIsla, indexPerson
