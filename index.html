@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Posiciones</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .islas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 32px;
+      row-gap: 48px;
+      border: 1px solid #d8d8d8;
+    }
+
+    .isla {
+
+    }
+    
+    .personas {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .persona {
+      border: 1px solid #d8d8d8;
+      padding: 10px 5px;
+      font-size: 24px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .persona:hover {
+      background-color: #fb8c00;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <ul class="islas">
+      <li v-for="(isla, indexIsla) in islas" class="isla">
+        <ul class="personas">
+          <li v-for="(person, indexPerson) in isla" class="persona" @click="addCambiaso({ person, indexIsla, indexPerson })" :style="stylesPerson({ person, indexIsla, indexPerson })">
+            {{ person }}
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+    let array = []
+    new Vue({
+      el: '#app',
+
+      created () {
+
+        const islas = JSON.parse(window.localStorage.getItem('islas'))
+        const cambiaso = JSON.parse(window.localStorage.getItem('cambiaso'))
+
+        if (islas) this.islas = islas
+        if (cambiaso) this.cambiaso = cambiaso
+      },
+
+      data () {
+        return {
+          cambiaso: [],
+          islas: [
+            [
+              'gus',
+              'agus',
+              'max',
+              'santi',
+              'X',
+              'nico',
+            ],
+            [
+              'tromps',
+              'duro',
+              'emi',
+              'necro',
+              'X',
+              'X',
+            ],
+            [
+              'pela',
+              'binario',
+              'pas 2',
+              'fede',
+              'afip',
+              'pela2',
+            ],
+            [
+              'facu',
+              'pas 1',
+              'fer',
+              'sergi',
+            ],
+            [
+              'euge',
+              'fede2',
+              'juanma',
+              'christian',
+            ],
+            [
+              'esdras',
+              'luigi',
+              'gusman',
+              'claudio',
+            ],
+          ]
+        }
+      },
+
+
+      watch: {
+        'cambiaso' (val) {
+          console.log(val)
+          window.localStorage.setItem('cambiaso', JSON.stringify(this.cambiaso))
+        },
+        'islas' (val) {
+          window.localStorage.setItem('islas', JSON.stringify(this.islas))
+        },
+      },
+
+      methods: {
+        addCambiaso({person, indexIsla, indexPerson}) {
+          this.cambiaso.push({
+            person, indexIsla, indexPerson
+          })
+
+          if (this.cambiaso.length == 2) {
+            const [person1, person2] = this.cambiaso
+            const clone = JSON.parse(JSON.stringify(this.islas))
+            clone[person2.indexIsla][person2.indexPerson] = person1.person
+            clone[person1.indexIsla][person1.indexPerson] = person2.person
+            this.islas = clone
+            this.cambiaso = []
+          }
+        },
+
+        stylesPerson ({ person, indexIsla, indexPerson }) {
+          const bool = this.cambiaso.some((item) => item.indexIsla == indexIsla && item.indexPerson == indexPerson)
+          
+          return {
+            'background-color': bool? '#fb8c00' : person== 'X'? '#d8d8d8' : 'white',
+            'opacity': person == 'X'? 0.5 : 1
+          }
+        }
+      },
+    })
+  </script>
+</body>
+</html>
